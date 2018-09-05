@@ -1,0 +1,156 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@model MvcApplicationReg.Models.fields
+<link href="https://ghinda.net/css-toggle-switch/dist/toggle-switch.css" rel="stylesheet" />
+<link href="~/Contents/Bootstrap.css" rel="stylesheet" />
+<link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>sample</title>
+</head>
+<body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    @using (Html.BeginForm("sample", "Login"))
+    {
+        <div class="switch-toggle switch-3 switch-candy" style="display: none">
+            @if (Model.Matched == 1)
+            {
+                <input id="on" name="state-d" type="radio" checked="checked">
+                <label for="on" onclick="">ON</label>
+            }
+            else
+            {
+                <input id="on" name="state-d" type="radio">
+                <label for="on" onclick="">ON</label>
+            }
+
+            @if (Model.Matched == null)
+            {
+                <input id="na" name="state-d" type="radio" disabled checked="checked">
+                <label for="na" onclick="">N/A</label>
+            }
+            else
+            {
+                <input id="na" name="state-d" type="radio" disabled>
+                <label for="na" onclick="">N/A</label>
+            }
+
+            @if (Model.Matched == 0)
+            {
+                <input id="off" name="state-d" type="radio" checked="checked">
+                <label for="off" onclick="">OFF</label>
+            }
+            else
+            {
+                <input id="off" name="state-d" type="radio">
+                <label for="off" onclick="">OFF</label>
+            }
+            <a></a>
+
+
+
+
+            @*@if (Model.Matched == 1)
+                {
+                    <div class="switch-toggle switch-3 switch-candy">
+                        <input id="on" name="state-d" type="radio" checked="checked">
+                        <label for="on" onclick="">ON</label>
+
+                        <input id="na" name="state-d" type="radio" disabled>
+                        <label for="na" onclick="">N/A</label>
+
+                        <input id="off" name="state-d" type="radio">
+                        <label for="off" onclick="">OFF</label>
+
+                        <a></a>
+                    </div>
+                }
+                else if (Model.Matched == 0)
+                {
+                    <div class="switch-toggle switch-3 switch-candy">
+                        <input id="on" name="state-d" type="radio">
+                        <label for="on" onclick="">ON</label>
+
+                        <input id="na" name="state-d" type="radio" disabled>
+                        <label for="na" onclick="">N/A</label>
+
+                        <input id="off" name="state-d" type="radio" checked="checked">
+                        <label for="off" onclick="">OFF</label>
+
+                        <a></a>
+                    </div>
+                }
+                else
+                {
+                    <div class="switch-toggle switch-3 switch-candy">
+                        <input id="on" name="state-d" type="radio">
+                        <label for="on" onclick="">ON</label>
+
+                        <input id="na" name="state-d" type="radio" disabled checked="checked">
+                        <label for="na" onclick="">N/A</label>
+
+                        <input id="off" name="state-d" type="radio">
+                        <label for="off" onclick="">OFF</label>
+
+                        <a></a>
+                    </div>
+                }*@
+
+        </div>
+    }
+
+    <select id="selectMe" style="display: none;">
+        <option value=""></option>
+        <option value="Naveen">Naveen</option>
+        <option value="Alekhya">Alekhya</option>
+        <option value="Kavitha">Kavitha</option>
+    </select>
+    <div id="sptxt"></div>
+    <input type="button" id="btnsave" class="btn btn-success pull-left" value="Save" />
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    $(document).keydown(function (event) {
+        if ((event.ctrlKey || event.metaKey) && event.which == 83) {
+            alert("naveen");           
+            $("#btnsave").trigger('click');           
+            event.preventDefault();
+            return false;
+        }
+    });
+
+
+    $('#btnsave').click(function () {
+        alert("Naveen said hai to Naveen");
+        $('#selectMe').show();
+    });
+    $('#selectMe').change(function () {
+        var value = "<span id=" + $('#selectMe').val() + ">" + $('#selectMe').val() + " " + "<i id=" + $('#selectMe').val() + " class='glyphicon glyphicon-remove' onclick='deleteValue(this)'></i></span>" + " ";
+        $('#sptxt').append(value);
+        $("#selectMe :selected").remove();
+
+
+    })
+
+    function deleteValue(e) {
+        var text = $(e).parent()[0].id;
+        console.log($(e).parent().remove());
+
+        var newOption = $('<option>');
+        newOption.attr('value', text).text(text);
+        $('#selectMe').append(newOption);
+
+        //$("option[value='"+value+"']").();
+    } 
+</script>

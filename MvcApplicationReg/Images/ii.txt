@@ -1,0 +1,126 @@
+
+
+
+abstract class mobile
+{
+	public void Method1();
+	Public void Method2();
+}
+
+Public class Mobile1 : mobile
+public class Mobile2 : mobile
+{	
+	public void Method3();
+	Public void Method4();
+}
+public class Mobile3 : mobile
+{	
+	public void Method3();
+	Public void Method4();
+	Public void Method4();
+}
+
+
+=========================
+
+interface Inaveen
+{
+	void method1();
+	void method2();
+}
+
+interface Inaveen2
+{
+	int add(int x,int y);
+	void method2();
+}
+
+public class karun : Inaveen,Inaveen2
+{
+	public void method1()
+	{
+		
+	}
+}
+
+public class child:parent1,pa
+{
+	parent1 obpr1 = new parent();
+	obpr1.a();	
+child c = new child();
+a;
+}
+
+=========================
+
+sqdldatareader dr;
+
+
+
+
+sqlcommand cmd = new sqlcommand("select * from table",con);
+dr = cmd.executereader();
+dt.load(dr);
+da.fill(dt);
+
+sqlcommand cmd = new sqlcommand("select count(*) from table",con);
+int count = cmd.executescalar();
+
+sqlcommand cmd = new sqlcommand("p_name",con);
+cmd.commandtype = cpmmandtype.storeproceder;
+cmd.parametrs.addwithvalue("p_name",);
+int result = cmd.executenonquery();
+
+
+SqlCommand cmd = new SqlCommand("select * from testimonals where id !=0", con)
+SqlDataAdapter da = new SqlDataAdapter(cmd)
+da.fill(ds);
+dt = ds.tables[0];
+var name = dt.rows[0]["Name"].ToString();
+
+=======================
+
+int[] arrayex = new int[3]; or int[] arrayex = new int[3]{1,2,3,4}; //int type array
+arrayex[0] = 1;
+
+string[] stringArray = new string[10];  // string type array
+
+object[] arrayex = new object[3]{1,'naveen',0.15561}; //it can hold multiple datatypes
+
+arraylist arrayex = new arraylist();  //no need to give the arraysize it works dynamically
+arayex.add(1);
+arayex.add("karun");
+
+
+
+
+1)HMIS - Health management information system(its a centralised application which stores the information of ip, op, hr, billing .. etc), it overcomes the tradational problem of paper based work to electronic health records.
+
+in this project we used mvc as front end and oracle as Database
+
+roles are:
+we followed mvc architecture
+implemented routing concept
+consumed web services to get info frm database
+
+2)Dashboard - in this project the main aim is to show the hospitality info like revenue, income, birth and death management, curency management etc in a collection of graphical view
+
+Asp.net, sql server , fusion chart
+
+3)HealthClaim - this project is to claim the insurance and to register health insurance policies
+
+Asp.net, sql server , 
+
+4)Radiology - it provides info on admission details, consultation details, laboratory and radiology , sugery details
+
+
+
+
+
+
+
+
+
+
+
+

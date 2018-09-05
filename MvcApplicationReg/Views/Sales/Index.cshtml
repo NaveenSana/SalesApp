@@ -1,0 +1,227 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Sales List</title>
+    <link href="~/Images/favicon.ico" rel="icon" type="image/x-icon" />
+    
+</head>
+
+<body>
+    <style>
+        .scrollToTop {
+            padding: 10px 12px;
+            position: fixed;
+            bottom: 8px;
+            right: 8px;
+            display: none;
+            background: #0086dc;
+            z-index: 999;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+    </style>
+
+    <div hidden="hidden">
+        @*<input type="text" id="txtSearch" />*@
+        <select class="form-control" id="UsersList" style="width: 250px;" name="UserRole"></select>
+        <input type="submit" id="btnsearch" class="btn btn-success" value="Search" />
+
+    </div>
+    <div  style="text-align:right">
+        <input type="button" id="btnBack" class="btn btn-success" value="Back" hidden="hidden" />
+    </div>
+
+    @*   <div id="backdiv" hidden="hidden">
+        @Html.ActionLink("Back", "Index", "Sales", new { @class = "class=btn btn-success"})
+    </div>*@
+
+    @*<div>
+        Total Users:    @Session["count"].ToString()
+    </div>*@
+
+
+
+    <div id="mask">
+        <img src="~/Images/page-loader.gif" style="vertical-align: middle; position: fixed; z-index: 7; left: 50%; top: 50%;"
+            id="progressload"
+            height="55" width="55" />
+    </div>
+
+    <a href="#" class="scrollToTop" style="display: inline;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 20 20">
+            <polygon fill="#FFFFFF" points="10,3.9 0,13.9 2.2,16.1 10,8.3 17.8,16.1 20,13.9 10,3.9 10,3.9 "></polygon>
+        </svg></a>
+
+    <span id="UserName" hidden="hidden" style="font-family: Verdana; font-size: 50px;"></span>
+
+    <div class="table-responsive" id="TotalordersDiv">
+        <table class="table" id="content">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">TOTALORDERS</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">PRICE</th>
+
+                </tr>
+            </thead>
+            <tbody id="tblsales" class="tbody-fixed scroll-style"></tbody>
+        </table>
+    </div>
+
+
+    <div class="table-responsive" id="UserOrdersDiv" hidden="hidden">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">OrderDate</th>
+                    <th scope="col">ProductName</th>
+                    <th scope="col">UnitPrice</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">TotalPrice</th>
+                </tr>
+            </thead>
+            <tbody id="tblorders" class="tbody-fixed scroll-style"></tbody>
+        </table>
+    </div>
+
+    <link href="~/Contents/pgination.css" rel="stylesheet" />
+    <link href="~/Contents/Bootstrap.css" rel="stylesheet" />
+    <link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Contents/mui.min.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            BindUsers();
+            getSalesData(0);
+        });
+
+        $("#btnsearch").click(function () {
+            var Searchtext = $("#txtSearch").val();
+            var SelectedUserId = $("#UsersList").val();
+            var SelectedUser = $("#UsersList option:selected").text();
+            $("#UserName").show();
+            $("#UserName").text("Orders of " + SelectedUser);
+            getUserSalesData(SelectedUserId);
+        });
+
+        $("#btnBack").click(function () {
+            window.location.href = "/sales/index";
+        })
+
+        $(document).on("click", ".orders", function () {
+            var id = $(this).attr("data-ID");
+            var name = $(this).attr("data-NAME");
+            $("#UserName").show();
+            $("#UserName").text("Orders of " + name);
+            getUserSalesData(id);
+        });
+
+        function getSalesData(Searchtext) {
+            $("#mask").show();
+            $("#UserName").hide();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetSalesData", "Sales")',
+                data: JSON.stringify({ Searchtext: Searchtext }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    if (data.length > 0) {
+                        $("#btnBack").hide();
+                        $("#TotalordersDiv").show();
+                        $("#tblsales").empty();
+                        for (var i = 0; i < data.length - 1; i++) {
+                            $("#tblsales").append("<tr><td><b>" + data[i].Name + "</td><td><a href='#' class='orders' data-ID='" + data[i].Id + "' data-NAME='" + data[i].Name + "'>" + data[i].TotalOrders + "</a></td><td>" + data[i].Phone + "</td><td>" + data[i].Country + "</td><td>" + data[i].TotalPrice.toLocaleString() + "</td></tr>");
+                        }
+                        $("#tblsales").append("<tr style='border-bottom:1px solid #d9d9d9; height:30px; color:black;  font-size:9pt;' bgcolor='#f0f8ff'><td colspan='4' style='border-left:1px solid #d9d9d9;' align='right'>Total Outstanding Balance : &nbsp;</td><td  colspan='1' style='border-left:1px solid #d9d9d9;' align='left'>" + data[data.length - 1].TotalAmount.toLocaleString() + "</td></tr>");
+                        $("#mask").hide();
+                    }
+                    else {
+                        $("#tblsales").empty();
+                        $("#tblsales").append("<tr><td>No Orders are there by this user, Select another user</td></tr>");
+                        $("#mask").hide();
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while binding Sales data.");
+                }
+            });
+        }
+
+        function getUserSalesData(Searchtext) {
+            $("#mask").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("getUserSalesData", "Sales")',
+                data: JSON.stringify({ Searchtext: Searchtext }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#TotalordersDiv").hide();
+                        $("#UserOrdersDiv").show();
+                        $("#btnBack").show();
+                        $("#tblorders").empty(); //moment(data[i].Orderdate).utc().format("DD/MM/YYYY") 
+                        for (var i = 0; i < data.length - 1; i++) {
+                            $("#tblorders").append("<tr><td>" + data[i].OrderID + "</td><td>" + moment(data[i].Orderdate).format('LL') + "</td><td>" + data[i].ProductName + "</td><td>" + data[i].UnitPrice + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].TotalPrice.toLocaleString() + "</td></tr>");
+                        }
+                        $("#tblorders").append("<tr style='border-bottom:1px solid #d9d9d9; height:30px; color:black;  font-size:9pt;' bgcolor='#f0f8ff'><td colspan='5' style='border-left:1px solid #d9d9d9;' align='right'>Total Outstanding Balance : &nbsp;</td><td  colspan='1' style='border-left:1px solid #d9d9d9;' align='left'>" + data[data.length - 1].TotalAmount.toLocaleString() + "</td></tr>");
+                        $("#mask").hide();
+                    }
+                    else {
+                        $("#TotalordersDiv").hide();
+                        $("#UserOrdersDiv").show();
+                        $("#btnBack").show();
+                        $("#tblorders").empty();
+                        $("#tblorders").append("<tr><td>No Orders are there by this user, Select another user</td></tr>");
+                        $("#mask").hide();
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while binding  User Sales data.");
+                }
+            });
+        }
+
+        function BindUsers() {
+            $("#UsersList").empty();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("GetAllUserss", "Sales")',
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var option = '';
+                    option += '<option value="0">Select All</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        option += '<option value="' + data[i].Id + '">' + data[i].Name + '</option>';
+                    }
+                    $("#UsersList").append(option);
+                },
+                error: function () {
+                    alert("Something went wrong while binding Users dropdown.");
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

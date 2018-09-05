@@ -1,0 +1,39 @@
+﻿@model MvcApplicationReg.Models.UserData
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<div class="container">
+
+        <div class="pen-title">
+            <div class="company-logo"></div>
+        </div>
+        <!-- Form Module-->
+        <div class="module form-module">
+            <div class="toggle"><i class="fa fa-key" aria-hidden="true"></i></div>
+            @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+            {
+                <div class="form">
+                    <h2>Login to your account</h2>
+                    <form>
+                        @Html.TextBoxFor(m => m.FisrtName, new { id = "Fname", type="name", placeholder = "Enter email",  name = "Email" })
+                        @Html.TextBoxFor(m => m.Password, new { id = "Password", type = "password", placeholder = "Password",  name = "Password"})
+                        @*<p class="validate-message">
+                            <label id="lblResponse">@ViewBag.ResponseText</label>
+                        </p>*@
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            }           
+        </div>
+
+    </div>
+</html>

@@ -1,0 +1,148 @@
+﻿@model IEnumerable<MvcApplicationReg.Models.filevalues>
+
+@{  
+    ViewBag.Title = "UploadFile";  
+}
+<h2>UploadFile</h2>
+@using (Html.BeginForm("UploadFile", "Login", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{        
+    <div>
+        @Html.TextBox("file", "", new { type = "file" })
+        @*<input type="file" id="fileToUpload" name="fileUpload" multiple="multiple" style="float: left;" />*@
+        <br />
+        @Html.TextBox("text", "", new { type = "text" })
+        <input type="submit" id="btnfile" value="Upload" />
+
+        <div id="viewid">
+            @ViewBag.Message
+        </div>
+    </div> 
+}
+
+
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+<link href="~/Contents/mui.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div>
+    <span id="count"></span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover" id="table">
+        <thead class="thead-fixed">
+            <tr>
+                <th>File Name</th>
+                <th>Image </th>
+            </tr>
+        </thead>
+        <tbody id="tblUser" class="tbody-fixed scroll-style"></tbody>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $("#file").replaceWith($("#file").val('').clone(true));
+
+        getFiles();
+    });
+
+    $(document).on("click", ".deleteUser", function () {
+        if (confirm("Are you sure you want to delete the file") == true) {
+            var id = $(this).attr("data-ID");
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("DeleteFile", "Login")',
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        confirm("Image deleted successfully.");
+                        getFiles();
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while deleting image.");
+                }
+            });
+        }
+    });
+
+    @*$(document).on("click", ".download", function () {
+        //if (confirm("Are you sure you want to delete the file") == true) {
+        debugger;
+        var filename = $(this).attr("data-Name");
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: '@Url.Action("DownloadFile", "Login")',
+            data: JSON.stringify({ filename: filename }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                if (data > 1) {
+                    confirm("Downloaded successfully.");
+                    getFiles();
+                }
+            },
+            error: function () {
+                alert("Something went wrong while downloading.");
+            }
+        });
+        //}
+    });*@
+
+
+
+
+    $(document).on("click", ".download", function () {
+        //if (confirm("Are you sure you want to delete the file") == true) {
+        debugger;
+        var filename = $(this).attr("data-Name");
+        @*window.location.href = "@Url.RouteUrl(new 
+            { Controller = "Login", Action = "DownloadFile"})/?file=" + filename;*@
+
+        
+        
+    });
+
+
+    function getFiles() {
+        //debugger;
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: '@Url.Action("GetAllFiles", "Login")',
+            data: JSON.stringify({}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $("#tblUser").empty();
+                for (var i = 0; i < data.length; i++) {
+                    var imagurl = '/Images/' + data[i].Name;
+                    //$("#tblUser").append("<tr><td>" + data[i].Name + "</td><td><img src='/Images/" + data[i].Name + "width='30px' height='30px''></td></tr>");
+                    $("#tblUser").append("<tr><td>" + data[i].InputFileName + "</td><td><a href='" + imagurl + "' target='_blank'><img src='/Images/" + data[i].Name + "' width='100px' title='Image'/></a></td><td><a href='#' class='deleteUser' data-ID='" + data[i].id + "'><span class='glyphicon glyphicon-trash' title='Delete'></span></a></td><td><a href='#' class='download' data-Name='" + data[i].Name + "'><span class='glyphicon glyphicon-download' title='Download'></span></a></td></tr>");                }
+            },
+            error: function () {
+                alert("Something went wrong while binding user data.");
+            }
+        });
+    }
+</script>
+
+@*@Html.ActionLink("Click here to get files", "GetAllFiles", "Login")*@

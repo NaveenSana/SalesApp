@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2></h2>
+<html>
+
+<head>
+    <link href="~/Content/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+
+
+<body>
+    <style>
+        .highlight {
+            color: red;
+        }
+    </style>
+    <header>
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">First Name:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtfname" class="form-control" placeholder="Enter FirstName" required />
+        </div>
+
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">Last Name:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtlname" class="form-control" placeholder="Enter LastName" required />
+        </div>
+
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">Password:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtpwd" class="form-control" placeholder="Enter Password" required />
+        </div>
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">Address:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtaddress" class="form-control" placeholder="Enter Address" required />
+        </div>
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">City:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtcity" class="form-control" placeholder="Enter City" required />
+        </div>
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">State:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtstate" class="form-control" placeholder="Enter State" required />
+        </div>
+        <div class="form-group">
+            <label for="Email" style="padding: 0px 0px 0px 6px;">Email:</label>
+            <input type="text" style="width: 200px; display: initial;" id="txtemail" class="form-control" placeholder="Enter Email" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Country"><span style="color: red;">*</span>Country:</label>
+            <select id="ddlcountry" name="Country" style="width: 200px; display: initial; visibility:hidden;" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+            <label for="username" style="padding: 0px 0px 0px 6px;">Pin:</label>
+            <input type="text" id="txtpin" style="width: 200px; display: initial;" class="form-control" placeholder="Enter Pincode" required />
+        </div>
+        <div class="row">
+            <div class="form-group popup_btns">
+                <input type="submit" id="btnsave" class="btn btn-success pull-left" value="Save" />
+            </div>
+        </div>
+        <div id='samplediv'>
+        </div>
+        <div>
+            <p id="old">this is number 123</p>
+            <p id="new">that is number 124</p>
+        </div>
+
+        <i class="fa fa-plus-square" id="iclick"></i>
+
+
+    </header>
+
+
+    @Html.ActionLink("Click Me", "GetAllUsers", "Login", null, null)
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>*@
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="/Images/MaxLength.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //GetCountries();
+
+        });
+
+        function countChar(val) {
+            var len = val.value.length;
+            if (len >= 500) {
+                val.value = val.value.substring(0, 500); //+ "<font size='3' color='red'>" + val.value.substring(500, len) + "</font>";
+                //alert("Please enter 500 characters");
+                $('#charNum').text("Please enter only 500 Characters");
+            } else {
+                var char = 500 - len;
+                $('#charNum').text(char + ' characters left');
+            }
+        };
+
+        //$(function () {
+        //    $("[id*=txtcount]").MaxLength(
+        //          {
+        //              MaxLength: 250,
+        //              CharacterCountControl: $('#counter')
+        //          });
+        //});
+
+        var result2;
+        //var txtone = document.getElementById("txtfname");
+        //var txttwo = document.getElementById("txtlname");
+        //comparetext(txtone, txttwo)
+
+        //function comparetext(to, tt) {
+        //    var newText = to;
+        //    var oldText = tt;
+        //    var text = "";
+        //    to.split("").forEach(function (value, index) {
+        //        if (value != oldText.charAt(index))
+        //            text += "<span class='highlight'>" + value + "</span>";
+        //        else
+        //            text += value;
+        //    });
+        //    //newText.html(text);
+        //    var sampletext = text;
+        //    //document.getElementById("sampletxt") = sampletext;
+        //    document.getElementById('sampletxt').innerHTML = sampletext;
+        //    //$("#sampletxt").val(sampletext);
+
+        //}
+
+
+        //highlight($("#new"), $("#old"));
+
+        //function highlight(newElem, oldElem) {
+        //    var newText = newElem.text();
+        //    var oldText = oldElem.text();
+
+        //    var text = "";
+        //    newElem.text().split("").forEach(function (value, index) {
+        //        if (value != oldText.charAt(index))
+        //            text += "<span class='highlight'>" + value + "</span>";
+        //        else
+        //            text += value;
+        //    });
+        //    newElem.html(text);
+        //}
+
+        $("#btnsave").click(function () {
+            //if ($("#txtfname").val().trim() == "" || $("#txtlname").val().trim() == "" || $("#txtpwd").val().trim() == "" || $("#txtstate").val().trim() == ""
+            //    || $("#txtcity").val().trim() == "" || $("#txtaddress").val().trim() == "" || $("#txtpin").val().trim() == "") {
+            //    alert("Enter all fileds");
+            //}
+            //else {
+            var fname = $("#txtfname").val();
+            var lname = $("#txtlname").val();
+            var password = $("#txtpwd").val();
+            var state = $("#txtstate").val();
+            var city = $("#txtcity").val();
+            var address = $("#txtaddress").val();
+            var pincode = $("#txtpin").val();
+            //var countryID = $("#ddlcountry").val();
+            //var CountryName = '';
+            //for (var i = 0; i < result2.length; i++) {
+            //    if (result2[i].CountryId == countryID) {
+            //        CountryName = result2[i].CountryName;
+            //    }
+            //}
+
+            saveuser(fname, lname, password, state, city, address, pincode);
+            //sendEmail();
+
+            //}
+        });
+
+        $("#iclick").click(function () {
+            alert("naveen");
+            $('#ddlcountry').show();
+        });
+
+        function saveuser(fname, lname, password, state, city, address, pincode) {
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("CreateUser", "Login")',
+                data: JSON.stringify({ fname: fname, lname: lname, password: password, state: state, city: city, address: address, pincode: pincode }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == 1) {
+                        confirm("User Created successfully.");
+                    }
+                },
+                error: function (data) {
+                    alert("Something went wrong while Creating User.");
+                }
+            });
+        }
+
+        function sendEmail() {
+            var email = $("#txtemail").val();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("ActivationLink", "Login")',
+                data: JSON.stringify({ email: email }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result == 1) {
+                        Confirm("Link sent successfully.");
+                    }
+                },
+                error: function (data) {
+                    Alert("Something went wrong while sending activation link.");
+                }
+            });
+
+        }
+
+        function GetCountries() {
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("GetAllCountries", "Login")',
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var option = '';
+                    result2 = result;
+                    // option += '<option value="0">Select Location</option>';
+                    option += '<option value="0" selected disabled>Select Location</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        option += '<option value="' + result[i].CountryId + '">' + result[i].CountryName + '</option>';
+                    }
+                    $("#ddlcountry").append(option);
+                    //$("#ddlcountry").data('combobox').refresh();
+                },
+                error: function (data) {
+                    alert("Something went wrong while Creating User.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

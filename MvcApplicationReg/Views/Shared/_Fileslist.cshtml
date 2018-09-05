@@ -1,0 +1,79 @@
+﻿
+
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+<link href="~/Contents/mui.min.css" rel="stylesheet" />
+<div class="table-responsive">
+    <table class="table" id="table">
+        <thead class="thead-fixed">
+            <tr>
+                <th>File Name</th>
+                <th>Image </th>
+            </tr>
+        </thead>
+        <tbody id="tblUser" class="tbody-fixed scroll-style"></tbody>
+    </table>
+
+</div>
+<button onclick="getFiles()">click</button>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+        //getFiles();
+    });
+
+
+    $(document).on("click", ".deleteUser", function () {
+        if (confirm("Are you sure you want to delete the file") == true) {
+            var id = $(this).attr("data-ID");
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("DeleteFile", "Login")',
+                data: JSON.stringify({ id: id }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        confirm("User deleted successfully.");
+                        getFiles();
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while deleting user.");
+                }
+            });
+        }
+    });
+
+    function getFiles() {
+        debugger;
+        $.ajax({
+            type: "GET",
+            //async: false,
+            url: '@Url.Action("getdata", "Login")',
+            data: JSON.stringify({}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                for (var i = 0; i < data.length; i++) {
+                    //$("#tblUser").append("<tr><td>" + data[i].Name + "</td><td><img src='/Images/" + data[i].Name + "width='30px' height='30px''></td></tr>");
+                    $("#tblUser").append("<tr><td>" + data[i].Name + "</td><td><img src='/Images/" + data[i].Name + "' width='100px' title='Reset Password'/></td><td><a href='#' class='deleteUser' data-ID='" + data[i].id + "'><span class='glyphicon glyphicon-trash' title='Delete'></span></a></td></tr>");
+
+                }
+            },
+
+            error: function () {
+                alert("Something went wrong while binding user data.");
+            }
+        });
+    }
+</script>

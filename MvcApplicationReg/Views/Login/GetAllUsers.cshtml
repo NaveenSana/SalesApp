@@ -1,0 +1,569 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .switch input {
+                display: none;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+        .scrollToTop {
+            padding: 10px 12px;
+            position: fixed;
+            bottom: 8px;
+            right: 8px;
+            display: none;
+            background: #0086dc;
+            z-index: 999;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    @* <h2>Toggle Switch</h2>
+
+    <label class="switch">
+        <input type="checkbox" id="chkchecked" onclick="check();" disabled="disabled">
+        <span class="slider"></span>
+    </label>
+    <label id="lblcheckd"></label>
+    <label id="lbluncheckd"></label>*@
+
+    <div>
+        <select class="form-control" id="UsersList" style="width: 250px;" name="UserRole"></select>
+
+        <input type="text" id="UserRole" />
+
+        <input type="submit" id="btnUser" title="Add Permission" value="Add Permission" />
+    </div>
+
+    @*var SelectedUser = $("#UsersList:selected").text();*@
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+        function check() {
+            $("#lblcheckd").text("");
+            $("#lbluncheckd").text("");
+            if ($('input#chkchecked').is(':checked')) {
+                //alert("is checked");
+                $("#lblcheckd").text("Checked");
+            }
+            else {
+                //alert("not checked");
+                $("#lbluncheckd").text("not checked");
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+@{
+    ViewBag.Title = "GetAllUsers";
+}
+
+<h2>GetAllUsers</h2>
+<html>
+<body>
+
+    <link href="~/Contents/Bootstrap.css" rel="stylesheet" />
+    <link href="~/Contents/Bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Contents/mui.min.css" rel="stylesheet" />
+    <div class="table-responsive">
+        <table class="table" id="table">
+            <thead class="thead-fixed">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>City</th>
+                    @*<th>Job Location</th>*@
+                    @* <th>State</th>*@
+                    <th>Code</th>
+                    @*<th class='text-center' data-sort-ignore="true"></th>
+                        <th class='text-center' data-sort-ignore="true"></th>*@
+                </tr>
+            </thead>
+            <tbody id="tblUser" class="tbody-fixed scroll-style"></tbody>
+        </table>
+
+        <input type="submit" id="btnUpdate" title="Update" />
+
+        @*@Html.ActionLink("Export Excel", "ExportToExcel", "Login", null, new { @class = "btn btn-primary" })*@
+        @* @Html.ActionLink("Export Excel", "ExcelDownload", "Login", null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("PrintAllReport", "Login")*@
+    </div>
+
+    @*<div id="userpopup" class="modal-content">       
+        <table>
+            <tr>
+                <td>
+                    <label>Name: </label>
+                    <input type="text" id="txtfname" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Email:  </label>
+                    <input type="text" id="txtemail" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Description:</label>
+                    <input type="text" id="txtdesc" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="submit" id="btnsub" value="Enter details" />
+                </td>
+            </tr>
+        </table>
+    </div>*@
+
+    <div class="modal-dialog" id="userpopup" style="display: none">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 0px;">
+                <h3 class="modal-title bg-primary" style="color: #fff; margin: 0px; padding: 5px;">Post your testimony
+                                <button type="button" class="close" onclick="closepop();" data-dismiss="modal">×</button>
+                </h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div>
+                        <div id="ContentPlaceHolder1_ValidationSummary1" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        &nbsp;
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            Name:
+                        </div>
+                        <div class="col-xs-12">
+                            <input name="ctl00$ContentPlaceHolder1$txtName" type="text" id="txtfname" class="form-control">
+                            <span id="ContentPlaceHolder1_rfvtxtName" style="display: none;">Please Provide your Name</span>
+                            <span id="ContentPlaceHolder1_revtxtName" style="display: none;">*</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        &nbsp;
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            Email Id:
+                        </div>
+                        <div class="col-xs-12">
+                            <input name="ctl00$ContentPlaceHolder1$txtEmail1" type="text" id="txtemail" class="form-control">
+                            <span id="ContentPlaceHolder1_rfvtxtEmail1" style="display: none;">Please Provide EmailId</span>
+                            <span id="ContentPlaceHolder1_revtxtEmail1" style="display: none;">Please Provide Valid EmailID</span>
+
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        &nbsp;
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            Your Message:
+                        </div>
+                        <div class="col-xs-12">
+                            <textarea name="ctl00$ContentPlaceHolder1$txtMessage" rows="2" cols="20" id="txtdesc" class="form-control" style="height: 120px;"></textarea>
+                            <span id="ContentPlaceHolder1_rfvtxtMessage" style="visibility: hidden;">Please Enter Comment</span>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        &nbsp;
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <input type="submit" name="ctl00$ContentPlaceHolder1$Button1" value="Submit" id="btnsub" title="Submit Testimonial" class="btn btn-warning form-control" style="vertical-align: bottom">
+                        </div>
+                        <div class="col-xs-6">
+                            <input type="submit" name="ctl00$ContentPlaceHolder1$Button2" value="Reset" id="btncancel" title="Reset Testimonial" class="btn btn-primary form-control" onclick="closepop();" style="vertical-align: bottom">
+                        </div>
+                    </div>
+                    <br>
+
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+
+    @* @using (Html.BeginForm("Testimonals", "Login"))
+    {
+        @Html.TextBox("txtfname")
+        @Html.TextBox("txtemail")
+        @Html.TextBox("txtdesc")
+        <input type="submit" id="btnsub" name="Submit" value="Submit" />  
+    }*@
+    <input type="button" id="btnpopup" value="Click me to open popup" />
+
+    <div id="mask">
+        <img src="~/Images/page-loader.gif" style="vertical-align: middle; position: fixed; z-index: 7; left: 50%; top: 50%;"
+            id="progressload"
+            height="55" width="55" />
+    </div>
+
+    <a href="#stage" class="scrollToTop" style="display: inline;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 20 20">
+            <polygon fill="#FFFFFF" points="10,3.9 0,13.9 2.2,16.1 10,8.3 17.8,16.1 20,13.9 10,3.9 10,3.9 "></polygon>
+        </svg></a>
+
+   @* <table id="stage">
+        <tr>
+            <th>event_title</th>
+            <th>event_link</th>
+            <th>event_date</th>
+        </tr>
+    </table>*@
+
+    @* <button id="retrieve-resources"></button>
+
+    <div id="display-resources">
+    </div>*@
+
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+            $("#mask").hide();
+            //$("#userpopup").hide();
+            GetTestimoials();
+            getusers();
+            BindUsers();
+            //getdata();
+        });
+
+
+        $("#btnpopup").click(function () {
+
+            //if ($("#txtFname").val() == "" || $("#txtEmail").val() == "") {
+            //    ModalAlert("Please fill all the mandatory fields!");
+            //}
+            //else {
+            //    var name = $("#txtFname").val();
+            //    var email = $("#txtEmail").val();
+            //    var guid = $("#hdnguid").val();
+            //    updateuser(name, email, guid)
+            //}
+            $("#userpopup").show();
+        });
+
+        $(function () {
+            $("#UsersList").change(function () {
+                var SelectedUserId = $("#UsersList").val();
+                if (SelectedUserId > 0) {
+                    binduserRole(SelectedUserId);
+                }
+            });
+        });
+
+
+        $("#btnUser").click(function () {
+            debugger;
+            var SelectedUserId = $("#UsersList").val();
+            var SelectedUser = $("#UsersList option:selected").text();
+            var UserRole = $("#UserRole").val();
+            if (UserRole == "" || SelectedUserId < 1) {
+                alert("Please assign User with a Role");
+                //UserRole = null;
+            }
+            else {
+                UserRole;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: '@Url.Action("AssignRole", "Login")',
+                    data: JSON.stringify({ SelectedUserId: SelectedUserId, UserRole: UserRole }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == 1) {
+                            alert("Adding role is successfull");
+                            getusers();
+                        }
+                    },
+                    error: function () {
+                        alert("Something went wrong while adding role to the user");
+                    }
+                });
+            }
+        });
+
+        $("#btnsub").click(function () {
+            var name = $("#txtfname").val();
+            var email = $("#txtemail").val();
+            var desc = $("#txtdesc").val();
+            if (name != "" && email != "" && desc != "") {
+                testimoials(name, email, desc);
+            }
+            else {
+                alert("Enter all fields");
+            }
+        });
+
+        function closepop() {
+            $("#userpopup").hide();
+        }
+
+        function testimoials(name, email, desc) {
+            var nnn = JSON.stringify({ Name: name, Email: email, Description: desc });
+            //alert(nnn);
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("Testimonals", "Login")',
+                //url: nnn,
+                data: nnn,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#userpopup").hide();
+                    getusers();
+                },
+
+            });
+        }
+
+        function GetTestimoials() {
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("GetAllTestimonials", "Login")',
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    //alert(data);
+                },
+
+            });
+        }
+
+
+
+        function getusers() {
+            $("#mask").show();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("GetAllUserss", "Login")',
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#tblUser").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        //if (i % 2 == 0) {
+                        $("#tblUser").append("<tr id=" + i + " style='color:red'><td>" + data[i].FisrtName + "</td><td>" + data[i].lastName + "</td><td>" + data[i].State + "</td><td>" + data[i].PinCode + "</td><td>" + data[i].Role + "</td><td><input data-Fname='" + data[i].FisrtName + "' onchange='handleChange(this)' type='checkbox' id=chck_" + i + " /></td></tr>");
+                        //}
+                        //else {
+                        //    $("#tblUser").append("<tr id=" + i + " style><td>" + data[i].FisrtName + "</td><td>" + data[i].lastName + "</td><td>" + data[i].State + "</td><td>" + data[i].PinCode + "</td><td>" + data[i].Role + "</td><td><input onchange='handleChange(this)' type='checkbox' id=chck_" + i + " /></td></tr>");
+                        //}
+                    }
+                    $('#UserRole').val('');
+                    $("#UsersList").val(0);
+                    $("#mask").hide();
+
+                },
+
+                error: function () {
+                    ModalAlert("Something went wrong while binding user data.");
+                }
+
+            });
+        }
+        //$('#retrieve-resources').click(function () {
+        //    getdata();
+        //});
+        //var result1;
+        function getdata() {
+            var text;
+            $.ajax({
+                //type: "GET",
+                url: "https://jsonplaceholder.typicode.com/posts",
+                dataType: "json",
+                success: function (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i].userId > 5) {
+                            text = "stage";
+                        }
+                        else {
+                            text = "table";
+                        }
+                        $("#stage").append("<tr><td><a href='#" + text + "'>" + result[i].userId + "</td><td>" + result[i].title + "</td><td>" + result[i].body + "</td></tr>");
+                    }
+                }
+            });
+        }
+
+
+        function BindUsers() {
+
+            $("#UsersList").empty();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("GetAllUserss", "Login")',
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var option = '';
+                    option += '<option value="0">Select User</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        option += '<option value="' + data[i].UserId + '">' + data[i].FisrtName + ' ' + data[i].lastName + '</option>';
+                    }
+                    $("#UsersList").append(option);
+                    //$("#UsersList").data('combobox').refresh();
+                },
+                error: function () {
+                    alert("Something went wrong while binding subsidiary dropdown.");
+                }
+            });
+        }
+
+
+        function binduserRole(SelectedUserId) {
+            //$("#UserRole").empty();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("BindUserRole", "Login")',
+                data: JSON.stringify({ userid: SelectedUserId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data !== null) {
+                        var role = data;
+                        alert("User is assigned with role: " + role);
+                        $("#UserRole").val(role);
+                    }
+                    else {
+                        alert("Please assign a Role")
+                        $('#UserRole').val('');
+                    }
+
+                },
+                error: function () {
+                    alert("Something went wrong while binding User Role.");
+                }
+            });
+        }
+
+        var names = [];
+
+        function handleChange(checkbox) {
+            var fname = $(this).attr("data-Fname");
+            console.log(fname);
+            console.log(checkbox);
+            if (checkbox.checked == true) {
+                names.push(checkbox.parentElement.parentElement.childNodes[0].innerText);
+            } else {
+                var index = names.indexOf(checkbox.parentElement.parentElement.childNodes[0].innerText);
+                //names.pop(index);
+                names.splice(index, 1);
+            }
+            console.log(names);
+        }
+
+        $("#btnUpdate").click(function () {
+            //alert(names);
+            debugger;
+            var Names = names.toString();
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: '@Url.Action("UpdatingUser", "Login")',
+                data: JSON.stringify({ names: Names }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data > 1) {
+                        alert("Selected Users are inactive");
+                    }
+                    else {
+                        alert("Somethig Went wrong")
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong while binding User Role.");
+                }
+            });
+        })
+
+    </script>
+</body>
+
+</html>
